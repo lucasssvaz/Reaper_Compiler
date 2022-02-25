@@ -7,6 +7,6 @@ C- compiler for the Reaper Processor
 ### Run:
 ```bash
 make
-./Compiler <Filename>
+./Compiler <Filename> <ID>
 ```
 
