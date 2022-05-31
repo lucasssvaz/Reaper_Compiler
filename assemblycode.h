@@ -19,12 +19,13 @@ extern int progloc; // (0: SO; 1:3 - Programas)
 #define nmem 256
 #define ninst 512
 
-#define cycles_div 2500
+#define cycles_div 5
 #define cycles_1s 50000000/(2*cycles_div)
 
+//ADD INSTRUCTIONS HERE
 typedef enum {  nop, halt, add, addi, bgt, sub, subi, mul, divi, mod, and, or, not, xor, muli, slt, sgt,
                 sle, sge, blt, shl, shr, move, ret,
-                li, beq, bne, j, jal, in, out, sw, lw, jr, ctx} InstrKind;
+                li, beq, bne, j, jal, in, out, sw, lw, jr, ctx, getch} InstrKind;
 typedef enum {  format1, format2, format3, format4 } InstrFormat;
 typedef enum {  instr, lbl } LineKind;
 typedef enum {  simple, vector, address } VarKind;

@@ -3,7 +3,7 @@
 
 void printType( TokenType);
 
-/* Procedure printToken prints a token 
+/* Procedure printToken prints a token
  * and its lexeme to the listing file
  */
 void printToken( TokenType, const char* );
@@ -13,7 +13,7 @@ void printToken( TokenType, const char* );
  */
 TreeNode * newStmtNode(StmtKind);
 
-/* Function newExpNode creates a new expression 
+/* Function newExpNode creates a new expression
  * node for syntax tree construction
  */
 TreeNode * newExpNode(ExpKind);
@@ -23,7 +23,7 @@ TreeNode * newExpNode(ExpKind);
  */
 char * copyString( char * );
 
-/* procedure printTree prints a syntax tree to the 
+/* procedure printTree prints a syntax tree to the
  * listing file using indentation to indicate subtrees
  */
 void printTree( TreeNode * );

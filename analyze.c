@@ -12,57 +12,57 @@ static void typeError(TreeNode * t, char * message)
 
 void UpdateScope(TreeNode * t)
 {
-  if (t->child[0] != NULL && t->child[0]->kind.exp == funDeclK) 
+  if (t->child[0] != NULL && t->child[0]->kind.exp == funDeclK)
   escopo = t->child[0]->attr.name;
 }
 
 // contador
 static int location = 0;
 
-/* Procedure traverse is a generic recursive 
+/* Procedure traverse is a generic recursive
  * syntax tree traversal routine:
- * it applies preProc in preorder and postProc 
+ * it applies preProc in preorder and postProc
  * in postorder to tree pointed to by t
  */
 static void traverse( TreeNode * t, void (* preProc) (TreeNode *), void (* postProc) (TreeNode *) ){ 
 
 	if (t != NULL)
- 	{ 
+ 	{
 		UpdateScope(t);
 		preProc(t);
-    	{ 
+    	{
 	  		int i;
 	        for (i=0; i < MAXCHILDREN; i++)
         		traverse(t->child[i], preProc, postProc);
     	}
-		if(t->child[0]!= NULL && t->child[0]->kind.exp == funDeclK) 
+		if(t->child[0]!= NULL && t->child[0]->kind.exp == funDeclK)
 			escopo = "global";
     	postProc(t);
     	traverse(t->sibling, preProc, postProc);
   	}
 }
 
-/* nullProc is a do-nothing procedure to 
+/* nullProc is a do-nothing procedure to
  * generate preorder-only or postorder-only
  * traversals from traverse
  */
-static void nullProc(TreeNode * t){ 
-	if (t==NULL) 
+static void nullProc(TreeNode * t){
+	if (t==NULL)
 		return;
-  	else 
+  	else
 		return;
 }
 
-/* Procedure insertNode inserts 
- * identifiers stored in t into 
- * the symbol table 
+/* Procedure insertNode inserts
+ * identifiers stored in t into
+ * the symbol table
  */
-static void insertNode( TreeNode * t){ 
-	
-	switch (t->nodekind)
-    { 
+static void insertNode( TreeNode * t){
 
-		case stmtK: 		
+	switch (t->nodekind)
+    {
+
+		case stmtK:
 			if(t->kind.stmt == assignK){
 				if (st_lookup(t->child[0]->attr.name) == -1){
 					fprintf(listing,"Linha %d - Erro: A variavel %s nao foi declarada.\n", t->lineno, t->child[0]->attr.name);
@@ -113,11 +113,13 @@ static void insertNode( TreeNode * t){
 				}
 				break;
 			case ativK:
+				//ADD SYSCALLS HERE
 				if (st_lookup(t->attr.name) == -1 &&
 					strcmp(t->attr.name, "input") != 0 &&
 					strcmp(t->attr.name, "output") != 0 &&
 					strcmp(t->attr.name, "yield") != 0 &&
 					strcmp(t->attr.name, "sleep") != 0 &&
+					strcmp(t->attr.name, "getch") != 0 &&
 					strcmp(t->attr.name, "execProc") != 0)
 				{
 					fprintf(listing, "Linha %d - Erro: A funcao %s nao foi declarada.\n", t->lineno, t->attr.name);
@@ -134,14 +136,14 @@ static void insertNode( TreeNode * t){
   }
 }
 
-void buildSymtab(TreeNode * syntaxTree){ 
+void buildSymtab(TreeNode * syntaxTree){
   //st_insert("input",0,location++, "global", "function", "integer"); // specification
-  //st_insert("output",0,location++, "global", "function", "void"); // specification 
-  traverse(syntaxTree,insertNode,nullProc); 
+  //st_insert("output",0,location++, "global", "function", "void"); // specification
+  traverse(syntaxTree,insertNode,nullProc);
   main_search();
   typeCheck(syntaxTree);
   if (TraceAnalyze)
-  { 
+  {
     fprintf(listing,"\nTabela de Simbolos:\n\n");
     printSymTab(listing);
   }
@@ -149,10 +151,10 @@ void buildSymtab(TreeNode * syntaxTree){
 
 static void checkNode(TreeNode * t){
  switch (t->nodekind)
-  { 
+  {
    case expK:
       switch (t->kind.exp)
-      { 
+      {
         case opK:
         	if (((t->child[0]->kind.exp == ativK) &&( getFunType(t->child[0]->attr.name)) == VOIDTYPE) ||
               ((t->child[1]->kind.exp == ativK) && (getFunType(t->child[1]->attr.name) == VOIDTYPE)))
@@ -165,7 +167,7 @@ static void checkNode(TreeNode * t){
       break;
     case stmtK:
       switch (t->kind.stmt)
-      { 
+      {
         case assignK:
           if (t->child[1]->kind.exp == ativK && getFunType(t->child[1]->attr.name) == VOIDTYPE)
             typeError(t->child[0],"Funcao com retorno void nao pode ser atribuido");
@@ -179,6 +181,6 @@ static void checkNode(TreeNode * t){
   }
 }
 
-void typeCheck(TreeNode * syntaxTree){ 
+void typeCheck(TreeNode * syntaxTree){
     traverse(syntaxTree,nullProc,checkNode);
 }

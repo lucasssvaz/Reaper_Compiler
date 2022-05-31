@@ -1,13 +1,13 @@
 %{
 
-    #define YYPARSER    
+    #define YYPARSER
     #include "globals.h"
     #include "util.h"
     #include "scan.h"
     #include "parse.h"
 
     #define YYSTYPE TreeNode *
-    static TreeNode * savedTree;   
+    static TreeNode * savedTree;
     static int yylex(void);
     int yyerror(char* msg);
     char *scope = "Global";
@@ -16,7 +16,6 @@
     static char *savedname;
     int flag = 0;
     int params = 0;
-    
 %}
 
 
@@ -34,7 +33,7 @@
 programa: declaracao_lista
         {
             savedTree = $1;
-        }        
+        }
     ;
 declaracao_lista: declaracao_lista declaracao
         {
@@ -120,7 +119,7 @@ fun_declaracao: INT id APR params FPR composto_decl
             $2->type= INTTYPE;
             $2->child[0]= $4;
             $2->child[1]= $6;
-            flag= 1;              
+            flag = 1;
         }
     | VOID id APR params FPR composto_decl
         {
@@ -186,7 +185,7 @@ param: tipo_especificador id
             $$->size= 0;
             flag= 0;
 
-            $2->kind.exp = paramK; 
+            $2->kind.exp = paramK;
         }
     ;
 
@@ -292,7 +291,7 @@ expressao_decl: expressao PV
         }
     | PV
         {
-            
+
         }
     | error {yyerrok;}
     ;
@@ -353,7 +352,7 @@ var: id
             // $$ = newExpNode(vectorK);
             $$->attr.name = $1->attr.name;
             $$->child[0] = $3;
-            
+
         }
 	;
 simples_expressao: soma_expressao relacional soma_expressao
@@ -414,20 +413,20 @@ soma_expressao: soma_expressao soma termo
 soma: SOM
         {
             $$ = newExpNode(opK);
-            $$->attr.op= SOM;    
+            $$->attr.op = SOM;
         }
 	| SUB
         {
             $$ = newExpNode(opK);
-            $$->attr.op= SUB;    
+            $$->attr.op = SUB;
         }
 	;
 termo: termo mult fator
         {
             $$ = $2;
             $$->scope = scope;
-            $$->child[0]= $1;
-            $$->child[1]= $3;
+            $$->child[0] = $1;
+            $$->child[1] = $3;
         }
 	| fator
         {
@@ -437,12 +436,12 @@ termo: termo mult fator
 mult: MUL
         {
             $$ = newExpNode(opK);
-            $$->attr.op= MUL;    
-        }	
+            $$->attr.op = MUL;
+        }
     | DIV
         {
             $$ = newExpNode(opK);
-            $$->attr.op= DIV;    
+            $$->attr.op = DIV;
         }
 	;
 fator: APR expressao FPR
@@ -469,7 +468,7 @@ ativacao: id APR arg_lista FPR
             $$->attr.name = $1->attr.name;
             $$->scope = scope;
             $$->child[0] = $3;
-            $$->params = params;    
+            $$->params = params;
         }
     | id APR FPR
         {
@@ -498,12 +497,11 @@ arg_lista: arg_lista VIR expressao
             $$ = $1;
         }
 	;
-   
 
 %%
 
 static int yylex(void){
-    return getToken(); 
+    return getToken();
 }
 
 int yyerror(char* msg){

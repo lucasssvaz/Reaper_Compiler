@@ -6,9 +6,10 @@
 #include "intercode.h"
 #include <math.h>
 
+//ADD INSTRUCTIONS HERE
 const char *operatorNameInstruction[] = {"nop", "halt", "add", "addi", "bgt", "sub", "subi", "mul", "divi", "mod", "and", "or", "not", "xor", "muli",
-                                        "slt", "sgt", "sle", "sge", "blt", "shl", "shr", "move", "ret", "li", "beq", "bne", "j", "jal", "in", "out", 
-                                        "sw", "lw", "jr", "ctx"};
+                                        "slt", "sgt", "sle", "sge", "blt", "shl", "shr", "move", "ret", "li", "beq", "bne", "j", "jal", "in", "out",
+                                        "sw", "lw", "jr", "ctx", "getch"};
 
 const char *regNames[] = {"$zero", "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
                           "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18",
@@ -485,7 +486,7 @@ void generateInstruction(QuadList l)
             break;
 
         case opCALL: //funciona junto com o ret
-
+            //ADD SYSCALLS HERE
             if (strcmp(a2.contents.var.name, "execProc") == 0)
             {
                 instructionFormat2(move, $ax2, getParamReg() - 1, 0, NULL);
@@ -505,13 +506,17 @@ void generateInstruction(QuadList l)
             {
                 instructionFormat3(in, getReg(a1.contents.var.name), 0, NULL);
             }
+            else if (strcmp(a2.contents.var.name, "getch") == 0)
+            {
+                instructionFormat3(getch, getReg(a1.contents.var.name), 0, NULL);
+            }
             else if (strcmp(a2.contents.var.name, "yield") == 0)
             {
                 instructionFormat3(li, $ax1, nmem, NULL);
                 instructionFormat1(mul, $ax1, $ctx, $ax1);
                 for (int i = 1; i < 61; ++i)
                     instructionFormat2(sw, i, $ax1, i, NULL);
-                
+
                 instructionFormat3(li, $ax1, $zero, NULL);
                 for (int i = 1; i < 61; ++i)
                     instructionFormat2(lw, i, $ax1, i, NULL);
@@ -540,7 +545,7 @@ void generateInstruction(QuadList l)
                 instructionFormat3(li, $jmp, line + 4, NULL); //jump 4 instructions
                 instructionFormat2(sw, $jmp, $ra, 0, NULL);
                 instructionFormat2(addi, $ra, $ra, 1, NULL); //changing scope
-                instructionFormat4(j, -1, a2.contents.var.name); 
+                instructionFormat4(j, -1, a2.contents.var.name);
                 instructionFormat2(move, getReg(a1.contents.var.name), $ret, 0, NULL); //ret receives the operator result
                 instructionFormat2(addi, $sp, $sp, -aux, NULL); //remove from the heap
             }
@@ -571,7 +576,7 @@ void generateInstruction(QuadList l)
 
                 instructionFormat3(li, $crt, 1, NULL);
                 instructionFormat3(ctx, $zero, 0, NULL);
-            }    
+            }
             else
             {
                 instructionFormat4(halt, 0, NULL);

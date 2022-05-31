@@ -23,7 +23,7 @@ Address aux;
 Address var;
 Address offset;
 
-
+//MIGHT NEED CHANGING WHEN ADDING INSTRUCTIONS
 const char *operatorName[] = {"ADD", "SUB", "MUL", "DIV", "LT", "LTE", "GT", "GTE", "EQ", "OR", "ASSIGN", "ALLOC", "IMMED", "LOAD", "STORE", "VECTOR", "GOTO", "IF", "RET", "FUNC", "F_END", "PARAM", "CALL", "ARG", "LAB", "HALT"};
 
 Address empty;
@@ -186,7 +186,7 @@ static void StmtNode(TreeNode *tree)
     UpdateQuad(loc2,CreateAddrString(label, tree->scope), empty, empty);
     if (tree->child[2] != NULL)
       UpdateQuad(loc3,CreateAddrString(label, tree->scope), empty, empty);
-    
+
     break;
 
   case whileK:
@@ -196,7 +196,7 @@ static void StmtNode(TreeNode *tree)
     label = newLabel();
     InsertQuad(opLAB,CreateAddrString(label, tree->scope), empty, empty); //you only know the label in the end of stmt
     // condicao while
-    InterCode(tree->child[0]); 
+    InterCode(tree->child[0]);
     addr1 = aux;
     // if condition is false
     loc1 = location;
@@ -228,7 +228,7 @@ static void StmtNode(TreeNode *tree)
     break;
 
   case returnK:
-    //tree->child[0] = ret 
+    //tree->child[0] = ret
     InterCode(tree->child[0]);
     // se tem retorno
     if (tree->child[0] != NULL)
@@ -295,10 +295,12 @@ static void ExpNode(TreeNode *tree)
             // if main
             if (strcmp(tree->attr.name, "main") == 0)
                 mainLocation = location;
+            //ADD SYSCALLS HERE
             if ((strcmp(tree->attr.name, "input") != 0) &&
                 (strcmp(tree->attr.name, "output") != 0) &&
                 (strcmp(tree->attr.name, "yield") != 0) &&
                 (strcmp(tree->attr.name, "sleep") != 0) &&
+                (strcmp(tree->attr.name, "getch") != 0) &&
                 (strcmp(tree->attr.name, "execProc") != 0))
             {
                 InsertQuad(opFUN, CreateAddrString(tree->attr.name, tree->scope), empty, empty);
@@ -410,7 +412,7 @@ static void ExpNode(TreeNode *tree)
                     InsertQuad(opOR, aux, addr1, addr2);
                     break;
                 default:
-                    break;  
+                    break;
                 }
             break;
 

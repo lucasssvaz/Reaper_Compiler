@@ -71,10 +71,10 @@ int main( int argc, char * argv[] ){
 
 	if (strchr (pgm, '.') == NULL)
 		strcat(pgm,".cm");
-	
+
 	source = fopen(pgm,"r");
 	if (source==NULL)
-	{ 
+	{
 		fprintf(stderr,"Arquivo %s nao encontrado\n",pgm);
 		exit(1);
 	}
@@ -94,7 +94,7 @@ int main( int argc, char * argv[] ){
 	}
 #if !NO_ANALYZE
 	if (! Error)
-	{ 
+	{
 		if (TraceAnalyze) fprintf(listing,"\nConstruindo Tabela de Simbolos...\n");
 		buildSymtab(syntaxTree);
 		if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
@@ -123,7 +123,7 @@ int main( int argc, char * argv[] ){
 		fclose(acode);
 		fclose(bcode);
 	}
-	
+
 #endif
 #endif
 #endif

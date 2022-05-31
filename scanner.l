@@ -1,3 +1,5 @@
+/* MIGHT NEED CHANGING WHEN ADDING INSTRUCTIONS */
+
 %option noyywrap
 
 %{
@@ -33,7 +35,7 @@ whitespace  [ \t\r]+
 "["				{return ACO;}
 "]"				{return FCO;}
 "{"				{return ACH;}
-"}"				{return FCH;} 
+"}"				{return FCH;}
 
 "/*"				{ char c;
 				  while(1){
@@ -44,9 +46,9 @@ whitespace  [ \t\r]+
 						c = input();
 						if(c=='/') break;
 						}
-					}	
-				}	
-			
+					}
+				}
+
 \n			        {lineno++;}
 "if"				{return IF;}
 "else"				{return ELSE;}

@@ -7,11 +7,11 @@
 
 
 static int hash (char* key)
-{ 
+{
     int temp = 0;
     int i = 0;
     while (key[i] != '\0')
-    { 
+    {
         temp = ((temp << SHIFT) + key[i]) % SIZE;
         ++i;
     }
@@ -19,37 +19,35 @@ static int hash (char* key)
 }
 
 typedef struct LineListRec
-{ 
+{
   int lineno;
   struct LineListRec * next;
-    
 } * LineList;
 
 typedef struct BucketListRec
-{ 
+{
   char* name;
   dataTypes Dtype;
   IDTypes Itype;
   char* scope;
   LineList lines;
-  int memloc ; 
-  int vet; 
+  int memloc;
+  int vet;
   struct BucketListRec * next;
-     
 } * BucketList;
 
 static BucketList hashTable[SIZE];
 
-void st_insert( char * name, int lineno, int loc, char* scope, 
+void st_insert( char * name, int lineno, int loc, char* scope,
 		dataTypes DType, IDTypes IType, int vet)
-{ 
- 
+{
+
     int h = hash(name);
     BucketList l =  hashTable[h];
-    while ((l != NULL) && (strcmp(name,l->name) != 0) && (strcmp(scope,l->scope) != 0)) 
+    while ((l != NULL) && (strcmp(name,l->name) != 0) && (strcmp(scope,l->scope) != 0))
             l = l->next;
     if (l == NULL || (loc != 0 && l->scope != scope && l->Itype != FUN)) /* variable not yet in table */
-    { 
+    {
         l = (BucketList) malloc(sizeof(struct BucketListRec));
         l->name = name;
         l->lines = (LineList) malloc(sizeof(struct LineListRec));
@@ -60,9 +58,8 @@ void st_insert( char * name, int lineno, int loc, char* scope,
         l->Itype = IType;
         l->Dtype = DType;
         l->next = hashTable[h];
-        hashTable[h] = l; 
+        hashTable[h] = l;
     }
-    
     else if (l->Itype == FUN && IType == VAR){
       fprintf(listing, "Linha %d - Erro: Nome da variavel %s já utilizada como nome de função.\n", lineno, name);
       Error = TRUE;
@@ -102,17 +99,17 @@ void st_insert( char * name, int lineno, int loc, char* scope,
       t->next->lineno = lineno;
       t->next->next = NULL;
     }
-} 
+}
 
 int st_lookup (char* name)
-{ 
-  int h = hash(name);	
+{
+  int h = hash(name);
   BucketList l =  hashTable[h];
   while ((l != NULL) && (strcmp(name,l->name) != 0))
         l = l->next;
-  if (l == NULL) 
+  if (l == NULL)
       return -1;
-  else 
+  else
       return l->memloc;
 }
 
@@ -146,10 +143,10 @@ void printSymTab(FILE * listing)
 { int i;
   fprintf(listing, "Variable Name  Escopo  Tipo ID  Tipo Dado  Numero Linha\n");
   fprintf(listing, "-------------  ------  -------  ---------  ------------\n");
-  for (i=0;i<SIZE;++i){ 
-    if (hashTable[i] != NULL){ 
+  for (i=0;i<SIZE;++i){
+    if (hashTable[i] != NULL){
     BucketList l = hashTable[i];
-      while (l != NULL){ 
+      while (l != NULL){
         LineList t = l->lines;
         fprintf(listing,"%-14s  ",l->name);
 		    fprintf(listing,"%-6s  ",l->scope);
@@ -186,8 +183,8 @@ void printSymTab(FILE * listing)
           break;
         }
         fprintf(listing, "%-7s  ", id);
-        fprintf(listing, "%-8s  ", data);	
-        while (t != NULL){ 
+        fprintf(listing, "%-8s  ", data);
+        while (t != NULL){
           fprintf(listing,"%3d ",t->lineno);
           t = t->next;
         }

@@ -6,13 +6,9 @@
 #include <ctype.h>
 #include <string.h>
 
-
-
 #ifndef YYPARSER
 
-
 #include "parser.tab.h"
-
 
 #define ENDFILE 0
 
@@ -28,15 +24,14 @@
 
 #define MAXRESERVED 8
 
-extern FILE* source; 
-extern FILE* listing; 
+extern FILE* source;
+extern FILE* listing;
 extern FILE* code;
 extern FILE* codeinter;
 extern FILE* acode;
 extern FILE* bcode;
 
-extern int lineno; 
-
+extern int lineno;
 
 typedef int TokenType;
 
@@ -51,12 +46,10 @@ typedef enum{  Void, Integer, booleanK  } ExpType;
 typedef enum {INTTYPE, VOIDTYPE, NULLL} dataTypes;
 typedef enum {VAR, FUN, CALL, VET} IDTypes;
 
-
 #define MAXCHILDREN 3
 
-
 typedef struct treeNode
-{ 
+{
    struct treeNode * child[MAXCHILDREN];
    struct treeNode * sibling;
    int flag;
@@ -80,7 +73,6 @@ typedef struct treeNode
 
 } TreeNode;
 
-
 extern int EchoSource;
 
 extern int TraceScan;
@@ -91,5 +83,5 @@ extern int TraceAnalyze;
 
 extern int TraceCode;
 
-extern int Error; 
+extern int Error;
 #endif

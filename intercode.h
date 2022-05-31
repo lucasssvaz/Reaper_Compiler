@@ -8,6 +8,7 @@
 #define nlabel_size 3
 #define ntemp_size 3
 
+//MIGHT NEED CHANGING WHEN ADDING INSTRUCTIONS
 typedef enum {  opADD, opSUB, opMULT, opDIV, opLT, opLTE, opGT, opGTE, opAND, opOR, opASSIGN, opALLOC, opIMMED, opLOAD, opSTORE, opVEC, opGOTO, opIF, opRET, opFUN, opEND, opPARAM, opCALL, opARG, opLAB, opHLT} OpKind;
 
 typedef enum {  Empty, IntConst, String } AddrKind;

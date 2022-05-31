@@ -5,6 +5,7 @@
 
 FILE * intercode;
 
+//MIGHT NEED CHANGING WHEN ADDING INSTRUCTIONS
 void printType( TokenType token ){
     switch (token){
         case SOM: fprintf(intercode, "SOM");   break;
@@ -21,9 +22,9 @@ void printType( TokenType token ){
 }
 
 void printToken( TokenType token, const char* tokenString )
-{ 
+{
   switch (token)
-  { 
+  {
     case NUM: fprintf(listing, "Numero: %s\n",tokenString); break;
     case ID:  fprintf(listing, "ID: %s\n",tokenString);  break;
 
@@ -59,21 +60,21 @@ void printToken( TokenType token, const char* tokenString )
     case GTE: fprintf(listing, ">=\n"); break;
     case CMP: fprintf(listing, "==\n"); break;
     case DIF: fprintf(listing, "!=\n"); break;
-    default: 
+    default:
     fprintf(listing,"Token Inválido: %d\n",token);
   }
 }
 
 
 TreeNode * newStmtNode(StmtKind kind)
-{ 
+{
     TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
     int i;
     if (t==NULL)
         fprintf(listing,"Erro de falta de memoria na linha %d\n",lineno);
-    else 
+    else
     {
-        for (i=0;i<MAXCHILDREN;i++) 
+        for (i=0;i<MAXCHILDREN;i++)
             t->child[i] = NULL;
         t->sibling = NULL;
         t->nodekind = stmtK;
@@ -85,18 +86,18 @@ TreeNode * newStmtNode(StmtKind kind)
 
 
 TreeNode * newExpNode(ExpKind kind)
-{ 
+{
     TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
     int i;
     if (t==NULL)
         fprintf(listing,"Erro de falta de memoria na linha %d\n",lineno);
-    else 
+    else
     {
-        for (i=0;i<MAXCHILDREN;i++) 
+        for (i=0;i<MAXCHILDREN;i++)
             t->child[i] = NULL;
         t->sibling = NULL;
         t->nodekind = expK;
-        t->kind.exp = kind; 
+        t->kind.exp = kind;
         t->lineno = lineno;
         t->type = Void;
     }
@@ -120,29 +121,27 @@ TreeNode * newExpNode(ExpKind kind)
 }*/
 
 char * copyString(char * s)
-{ 
+{
     int n;
     char * t;
-    if (s==NULL) 
+    if (s==NULL)
         return NULL;
     n = strlen(s)+1;
     t = malloc(n);
     if (t==NULL)
         fprintf(listing,"Erro de falta de memoria na linha %d\n",lineno);
-    else 
+    else
         strcpy(t,s);
     return t;
 }
 
 static int indentno = 0;
 
-
 #define INDENT indentno+=4
 #define UNINDENT indentno-=4
 
-
 static void printSpaces(void)
-{ 
+{
   int i;
     for (i=0;i<indentno;i++)
       fprintf(listing," ");
@@ -164,10 +163,10 @@ void printTree( TreeNode * tree )
             break;
         case whileK:
             fprintf(listing,"While\n");
-            break;       
+            break;
         case returnK:
             fprintf(listing, "Return\n");
-            break;        
+            break;
 
         default:
             fprintf(listing,"Unknown StmtNode kind\n");
@@ -200,7 +199,7 @@ void printTree( TreeNode * tree )
             break;
         case paramK:
            fprintf(listing,"Id: %s\n",tree->attr.name);
-           break; 
+           break;
         case vectorK:
           fprintf(listing, "Vetor: %s\n", tree->attr.name);
 	        break;
