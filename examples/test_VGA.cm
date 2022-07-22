@@ -1,0 +1,52 @@
+void color_palette(void)
+{
+    int red;
+    int green;
+    int blue;
+    int color_int;
+    int x;
+    int y;
+
+    red = 0;
+    green = 0;
+    blue = 0;
+
+    while (red < 8)
+    {
+        green = 0;
+        while (green < 8)
+        {
+            blue = 0;
+            while (blue < 8)
+            {
+                x = 2*(8*red + blue);
+                y = 2*green;
+                color_int = 64*red + 8*green + blue;
+                draw_pixel(x, y, color_int);
+                draw_pixel(x+1, y, color_int);
+                draw_pixel(x, y+1, color_int);
+                draw_pixel(x+1, y+1, color_int);
+                blue = blue + 1;
+            }
+            green = green + 1;
+        }
+        red = red + 1;
+    }
+}
+
+void main(void)
+{
+    color_palette();
+    draw_v_line(20, 20, 511, 3);
+    draw_h_line(25, 25, 511, 3);
+    draw_box(30, 30, 32, 32, 511);
+    draw_char(35, 35, 511, 65);
+    draw_char(45, 45, 511, 66);
+    draw_char(55, 55, 511, 67);
+    draw_char(65, 65, 511, 68);
+    draw_char(75, 75, 448, 76);
+    draw_char(75+8, 75, 56, 117);
+    draw_char(75+2*8, 75, 7, 99);
+    draw_char(75+3*8, 75, 455, 97);
+    draw_char(75+4*8, 75, 504, 115);
+}

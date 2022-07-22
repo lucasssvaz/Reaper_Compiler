@@ -301,7 +301,13 @@ static void ExpNode(TreeNode *tree)
                 (strcmp(tree->attr.name, "yield") != 0) &&
                 (strcmp(tree->attr.name, "sleep") != 0) &&
                 (strcmp(tree->attr.name, "getch") != 0) &&
-                (strcmp(tree->attr.name, "execProc") != 0))
+                (strcmp(tree->attr.name, "draw_pixel") != 0) &&
+                (strcmp(tree->attr.name, "draw_v_line") != 0) &&
+                (strcmp(tree->attr.name, "draw_h_line") != 0) &&
+                (strcmp(tree->attr.name, "draw_box") != 0) &&
+                (strcmp(tree->attr.name, "draw_char") != 0) &&
+                (strcmp(tree->attr.name, "clear_screen") != 0) &&
+                (strcmp(tree->attr.name, "exec_proc") != 0))
             {
                 InsertQuad(opFUN, CreateAddrString(tree->attr.name, tree->scope), empty, empty);
                 // params

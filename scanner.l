@@ -64,9 +64,9 @@ whitespace  [ \t\r]+
 "=="				{return CMP;}
 "!="				{return DIF;}
 
-{DIGITO}+			{return NUM;}
-{LETRA}+			{return ID;}
-.			        {return ERR;}
+{DIGITO}+	    		            {return NUM;}
+({LETRA}|_)({LETRA}|_|{DIGITO})*	{return ID;}
+.			                        {return ERR;}
 %%
 
 TokenType getToken(void){

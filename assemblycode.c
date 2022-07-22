@@ -9,15 +9,15 @@
 //ADD INSTRUCTIONS HERE
 const char *operatorNameInstruction[] = {"nop", "halt", "add", "addi", "bgt", "sub", "subi", "mul", "divi", "mod", "and", "or", "not", "xor", "muli",
                                         "slt", "sgt", "sle", "sge", "blt", "shl", "shr", "move", "ret", "li", "beq", "bne", "j", "jal", "in", "out",
-                                        "sw", "lw", "jr", "ctx", "getch"};
+                                        "sw", "lw", "jr", "ctx", "getch", "dwpx", "dwch"};
 
 const char *regNames[] = {"$zero", "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
                           "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18",
                           "$t19", "$t20", "$t21", "$t22", "$t23", "$t24", "$t25", "$t26", "$t27", "$t28",
                           "$t29", "$t30", "$t31", "$t32", "$t33", "$t34", "$t35", "$t36", "$t37", "$t38",
                           "$t39", "$r0", "$r1", "$r2", "$r3", "$r4", "$r5", "$r6", "$r7", "$r8",
-                          "$r9", "$sp", "$gp", "$jmp", "$ra", "$ret", "$br", "$ctx", "$k7", "$k8",
-                          "$k9", "$ax1", "$ax2", "$crt"};
+                          "$r9", "$sp", "$gp", "$jmp", "$ra", "$ret", "$br", "$ctx", "$txc", "$ax0",
+                          "$ax1", "$ax2", "$ax3", "$crt"};
 
 AssemblyCode codehead = NULL;
 FunList funlisthead = NULL;
@@ -29,6 +29,18 @@ int curparam = 0;
 int curarg = 0;
 int narg = 0;
 int jmpmain = 0;
+int syscall_label_counter = 0;
+
+char *new_syscall_label()
+{
+    char *final_str = (char *) calloc(20, sizeof(char));
+    char var_buffer[10];
+
+    strcat(final_str, "L_SYSCALL");
+    sprintf(var_buffer, "%d", syscall_label_counter);
+    syscall_label_counter++;
+    return strcat(final_str, var_buffer);
+}
 
 void insertFun(char *id)
 {
@@ -171,7 +183,7 @@ void instructionFormat4(InstrKind opcode, int im, char *imlbl)
 
 Reg getParamReg()
 {
-    return (Reg)1 + nregtemp + curparam;
+    return (Reg)nregtemp + curparam;
 }
 
 Reg getArgReg()
@@ -481,25 +493,30 @@ void generateInstruction(QuadList l)
             break;
 
         case opPARAM:
-            instructionFormat2(move, getParamReg(), getReg(a1.contents.var.name), 0, NULL);
+            instructionFormat2(move, getParamReg()+1, getReg(a1.contents.var.name), 0, NULL);
             curparam++;
             break;
 
         case opCALL: //funciona junto com o ret
             //ADD SYSCALLS HERE
-            if (strcmp(a2.contents.var.name, "execProc") == 0)
+            if (strcmp(a2.contents.var.name, "exec_proc") == 0)
             {
-                instructionFormat2(move, $ax2, getParamReg() - 1, 0, NULL);
+                // 0 -> Proc_ID
+                int proc_id = getParamReg();
+                int proc_id_bak = $ax1;
+                int start_addr = $ax0;
 
-                for (int i = 1; i < 61; ++i)
+                instructionFormat2(move, proc_id_bak, proc_id, 0, NULL);
+
+                for (int i = 1; i < nregisters-nregsyscall-1; ++i)
                     instructionFormat2(sw, i, $zero, i, NULL);
 
-                instructionFormat3(li, $ax1, nmem, NULL);
-                instructionFormat1(mul, $ax1, $ax2, $ax1);
-                for (int i = 1; i < 61; ++i)
-                    instructionFormat2(lw, i, $ax1, i, NULL);
+                instructionFormat3(li, start_addr, nmem, NULL);
+                instructionFormat1(mul, start_addr, proc_id_bak, start_addr);
+                for (int i = 1; i < nregisters-nregsyscall-1; ++i)
+                    instructionFormat2(lw, i, start_addr, i, NULL);
 
-                instructionFormat3(ctx, $ax2, 0, NULL);
+                instructionFormat3(ctx, proc_id_bak, 0, NULL);
                 instructionFormat2(move, getReg(a1.contents.var.name), $crt, 0, NULL);
             }
             else if (strcmp(a2.contents.var.name, "input") == 0)
@@ -512,31 +529,185 @@ void generateInstruction(QuadList l)
             }
             else if (strcmp(a2.contents.var.name, "yield") == 0)
             {
-                instructionFormat3(li, $ax1, nmem, NULL);
-                instructionFormat1(mul, $ax1, $ctx, $ax1);
-                for (int i = 1; i < 61; ++i)
-                    instructionFormat2(sw, i, $ax1, i, NULL);
+                int start_addr = $ax0;
 
-                instructionFormat3(li, $ax1, $zero, NULL);
-                for (int i = 1; i < 61; ++i)
-                    instructionFormat2(lw, i, $ax1, i, NULL);
+                instructionFormat3(li, start_addr, nmem, NULL);
+                instructionFormat1(mul, start_addr, $ctx, start_addr);
+                for (int i = 1; i < nregisters-nregsyscall-1; ++i)
+                    instructionFormat2(sw, i, start_addr, i, NULL);
+
+                instructionFormat3(li, start_addr, $zero, NULL);
+                for (int i = 1; i < nregisters-nregsyscall-1; ++i)
+                    instructionFormat2(lw, i, start_addr, i, NULL);
 
                 instructionFormat3(li, $crt, 0, NULL);
                 instructionFormat3(ctx, $zero, 0, NULL);
             }
             else if (strcmp(a2.contents.var.name, "output") == 0)
             {
-                instructionFormat3(out, getParamReg()-1, 0, NULL);
-                instructionFormat4(nop, 0, NULL);
+                // 0 -> Number
+                instructionFormat3(out, getParamReg(), 0, NULL);
             }
             else if (strcmp(a2.contents.var.name, "sleep") == 0)
             {
-                instructionFormat3(li, $ax2, cycles_1s, NULL);
-                instructionFormat1(mul, $ax1, getParamReg() - 1, $ax2);
-                instructionFormat3(li, $br, line + 2, NULL);
-                instructionFormat3(li, $ax2, 6, NULL);
-                instructionFormat2(addi, $ax2, $ax2, 2, NULL);
-                instructionFormat1(blt, $br, $ax2, $ax1);
+                // 0 -> Seconds
+                int n_cycles = $ax0;
+                int cycle_counter = $ax1;
+                int n_seconds = getParamReg();
+
+                char *loop_start = new_syscall_label();
+
+                instructionFormat3(li, n_cycles, cycles_1s, NULL);
+                instructionFormat1(mul, n_cycles, n_seconds, n_cycles);
+                instructionFormat3(li, $br, -1, loop_start);
+                instructionFormat3(li, cycle_counter, 6, NULL);
+                insertLabel(loop_start);
+                instructionFormat2(addi, cycle_counter, cycle_counter, 2, NULL);
+                instructionFormat1(blt, $br, cycle_counter, n_cycles);
+            }
+            else if (strcmp(a2.contents.var.name, "draw_pixel") == 0)
+            {
+                // -2 -> X, -1 -> Y, 0 -> Color
+                instructionFormat1(dwpx, getParamReg()-2, getParamReg()-1, getParamReg());
+            }
+            else if (strcmp(a2.contents.var.name, "draw_h_line") == 0)
+            {
+                // -3 -> X, -2 -> Y, -1 -> Color, 0 -> Length
+                int x_start = getParamReg()-3;
+                int y = getParamReg()-2;
+                int color = getParamReg()-1;
+                int length = getParamReg();
+                int x_counter = $ax0;
+                int x_end = $ax1;
+
+                char *x_loop_start = new_syscall_label();
+                char *x_loop_exit = new_syscall_label();
+
+                instructionFormat2(move, x_counter, x_start, 0, NULL);
+                instructionFormat1(add, x_end, x_start, length);
+                instructionFormat3(li, $br, -1, x_loop_exit);
+                insertLabel(x_loop_start);
+                instructionFormat1(beq, $br, x_counter, x_end);
+                instructionFormat1(dwpx, x_counter, y, color);
+                instructionFormat2(addi, x_counter, x_counter, 1, NULL);
+                instructionFormat4(j, -1, x_loop_start);
+                insertLabel(x_loop_exit);
+            }
+            else if (strcmp(a2.contents.var.name, "draw_v_line") == 0)
+            {
+                // -3 -> X, -2 -> Y, -1 -> Color, 0 -> Length
+                int x = getParamReg()-3;
+                int y_start = getParamReg()-2;
+                int color = getParamReg()-1;
+                int length = getParamReg();
+                int y_counter = $ax0;
+                int y_end = $ax1;
+
+                char *y_loop_start = new_syscall_label();
+                char *y_loop_exit = new_syscall_label();
+
+                instructionFormat2(move, y_counter, y_start, 0, NULL);
+                instructionFormat1(add, y_end, y_start, length);
+                instructionFormat3(li, $br, -1, y_loop_exit);
+                insertLabel(y_loop_start);
+                instructionFormat1(beq, $br, y_counter, y_end);
+                instructionFormat1(dwpx, x, y_counter, color);
+                instructionFormat2(addi, y_counter, y_counter, 1, NULL);
+                instructionFormat4(j, -1, y_loop_start);
+                insertLabel(y_loop_exit);
+            }
+            else if (strcmp(a2.contents.var.name, "draw_box") == 0)
+            {
+                // -4 -> X1, -3 -> Y1, -2 -> X2, -1 -> Y2, 0 -> Color
+                int x_start = getParamReg()-4;
+                int y_start = getParamReg()-3;
+                int x_end = getParamReg()-2;
+                int y_end = getParamReg()-1;
+                int color = getParamReg();
+                int x_counter = $ax0;
+                int y_counter = $ax1;
+
+                char *y_loop_exit = new_syscall_label();
+                char *x_loop_exit = new_syscall_label();
+                char *y_loop_start = new_syscall_label();
+                char *x_loop_start = new_syscall_label();
+
+                instructionFormat2(move, y_counter, y_start, 0, NULL);
+                instructionFormat3(li, $br, -1, y_loop_exit);
+                instructionFormat3(li, $jmp, -1, x_loop_exit);
+
+                insertLabel(y_loop_start);
+                instructionFormat1(bgt, $br, y_counter, y_end);
+
+                instructionFormat2(move, x_counter, x_start, 0, NULL);
+                insertLabel(x_loop_start);
+                instructionFormat1(bgt, $jmp, x_counter, x_end);
+                instructionFormat1(dwpx, x_counter, y_counter, color);
+                instructionFormat2(addi, x_counter, x_counter, 1, NULL);
+                instructionFormat4(j, -1, x_loop_start);
+                insertLabel(x_loop_exit);
+
+                instructionFormat2(addi, y_counter, y_counter, 1, NULL);
+                instructionFormat4(j, -1, y_loop_start);
+                insertLabel(y_loop_exit);
+            }
+            else if (strcmp(a2.contents.var.name, "draw_char") == 0)
+            {
+                // -3 -> X, -2 -> Y, -1 -> Color, 0 -> Char Byte
+                int x_start = getParamReg()-3;
+                int y_start = getParamReg()-2;
+                int color = getParamReg()-1;
+                int c_byte = getParamReg();
+                int pixel_counter = $ax0;
+                int pixel_end = $ax1;
+
+                char *loop_start = new_syscall_label();
+
+                instructionFormat2(move, $txc, color, 0, NULL);
+                instructionFormat3(li, pixel_counter, 0, NULL);
+                instructionFormat3(li, pixel_end, 64, NULL);
+                instructionFormat3(li, $br, -1, loop_start);
+                insertLabel(loop_start);
+                instructionFormat1(dwch, x_start, y_start, c_byte);
+                instructionFormat2(addi, pixel_counter, pixel_counter, 1, NULL);
+                instructionFormat1(blt, $br, pixel_counter, pixel_end);
+
+            }
+            else if (strcmp(a2.contents.var.name, "clear_screen") == 0)
+            {
+                int x_start = $zero;
+                int y_start = $zero;
+                int x_end = $ax2;
+                int y_end = $ax3;
+                int color = $zero;
+                int x_counter = $ax0;
+                int y_counter = $ax1;
+
+                char *y_loop_exit = new_syscall_label();
+                char *x_loop_exit = new_syscall_label();
+                char *y_loop_start = new_syscall_label();
+                char *x_loop_start = new_syscall_label();
+
+                instructionFormat3(li, x_end, framebuffer_width-1, NULL);
+                instructionFormat3(li, y_end, framebuffer_height-1, NULL);
+                instructionFormat2(move, y_counter, y_start, 0, NULL);
+                instructionFormat3(li, $br, -1, y_loop_exit);
+                instructionFormat3(li, $jmp, -1, x_loop_exit);
+
+                insertLabel(y_loop_start);
+                instructionFormat1(bgt, $br, y_counter, y_end);
+
+                instructionFormat2(move, x_counter, x_start, 0, NULL);
+                insertLabel(x_loop_start);
+                instructionFormat1(bgt, $jmp, x_counter, x_end);
+                instructionFormat1(dwpx, x_counter, y_counter, color);
+                instructionFormat2(addi, x_counter, x_counter, 1, NULL);
+                instructionFormat4(j, -1, x_loop_start);
+                insertLabel(x_loop_exit);
+
+                instructionFormat2(addi, y_counter, y_counter, 1, NULL);
+                instructionFormat4(j, -1, y_loop_start);
+                insertLabel(y_loop_exit);
             }
             else
             {

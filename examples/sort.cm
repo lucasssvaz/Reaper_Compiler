@@ -1,4 +1,4 @@
-/* programa para ordenação por seleção de 
+/* programa para ordenação por seleção de
    uma matriz com dez elementos. */
 
 int vet[ 10 ];
@@ -61,5 +61,3 @@ void main(void)
 		i = i + 1;
 	}
 }
-
-			

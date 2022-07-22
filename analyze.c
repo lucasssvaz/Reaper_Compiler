@@ -120,7 +120,13 @@ static void insertNode( TreeNode * t){
 					strcmp(t->attr.name, "yield") != 0 &&
 					strcmp(t->attr.name, "sleep") != 0 &&
 					strcmp(t->attr.name, "getch") != 0 &&
-					strcmp(t->attr.name, "execProc") != 0)
+					strcmp(t->attr.name, "draw_pixel") != 0 &&
+					strcmp(t->attr.name, "draw_v_line") != 0 &&
+					strcmp(t->attr.name, "draw_h_line") != 0 &&
+					strcmp(t->attr.name, "draw_box") != 0 &&
+					strcmp(t->attr.name, "draw_char") != 0 &&
+					strcmp(t->attr.name, "clear_screen") != 0 &&
+					strcmp(t->attr.name, "exec_proc") != 0)
 				{
 					fprintf(listing, "Linha %d - Erro: A funcao %s nao foi declarada.\n", t->lineno, t->attr.name);
 					st_insert(t->attr.name, t->lineno, 0, escopo, NULLL, CALL, t->vet);
