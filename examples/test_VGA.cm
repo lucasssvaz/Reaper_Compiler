@@ -36,17 +36,39 @@ void color_palette(void)
 
 void main(void)
 {
-    color_palette();
-    draw_v_line(20, 20, 511, 3);
-    draw_h_line(25, 25, 511, 3);
-    draw_box(30, 30, 32, 32, 511);
-    draw_char(35, 35, 511, 65);
-    draw_char(45, 45, 511, 66);
-    draw_char(55, 55, 511, 67);
-    draw_char(65, 65, 511, 68);
-    draw_char(75, 75, 448, 76);
-    draw_char(75+8, 75, 56, 117);
-    draw_char(75+2*8, 75, 7, 99);
-    draw_char(75+3*8, 75, 455, 97);
-    draw_char(75+4*8, 75, 504, 115);
+    int y;
+    int x;
+    int start_y;
+    start_y = 60;
+
+    while(1)
+    {
+        color_palette();
+        draw_v_line(20, 20, 511, 3);
+        draw_h_line(25, 20, 511, 3);
+        draw_box(30, 20, 32, 22, 511);
+        draw_box(35, 20, 35+7, 20+7, 464);
+        draw_char(40, 20, 511, 65);
+        draw_char(75, 20, 448, 76);
+        draw_char(75+8, 20, 56, 117);
+        draw_char(75+2*8, 20, 7, 99);
+        draw_char(75+3*8, 20, 455, 97);
+        draw_char(75+4*8, 20, 504, 115);
+
+        y = 0;
+        while (y < 8)
+        {
+            x = 0;
+            while (x < 16)
+            {
+                draw_char(x*8, start_y + 8*y, 511, 16*y+x);
+                x = x + 1;
+            }
+            y = y + 1;
+        }
+
+        sleep(30);
+        clear_screen();
+        sleep(5);
+    }
 }
