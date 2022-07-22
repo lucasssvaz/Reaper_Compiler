@@ -16,7 +16,7 @@ const char *regNames[] = {"$zero", "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t
                           "$t19", "$t20", "$t21", "$t22", "$t23", "$t24", "$t25", "$t26", "$t27", "$t28",
                           "$t29", "$t30", "$t31", "$t32", "$t33", "$t34", "$t35", "$t36", "$t37", "$t38",
                           "$t39", "$r0", "$r1", "$r2", "$r3", "$r4", "$r5", "$r6", "$r7", "$r8",
-                          "$r9", "$sp", "$gp", "$jmp", "$ra", "$ret", "$br", "$ctx", "$txc", "$ax0",
+                          "$r9", "$sp", "$gp", "$jmp", "$ra", "$ret", "$br", "$ctx", "$k7", "$ax0",
                           "$ax1", "$ax2", "$ax3", "$crt"};
 
 AssemblyCode codehead = NULL;
@@ -660,10 +660,11 @@ void generateInstruction(QuadList l)
                 int c_byte = getParamReg();
                 int pixel_counter = $ax0;
                 int pixel_end = $ax1;
+                int pixel_color = $ax2;
 
                 char *loop_start = new_syscall_label();
 
-                instructionFormat2(move, $txc, color, 0, NULL);
+                instructionFormat2(move, pixel_color, color, 0, NULL);
                 instructionFormat3(li, pixel_counter, 0, NULL);
                 instructionFormat3(li, pixel_end, 64, NULL);
                 instructionFormat3(li, $br, -1, loop_start);

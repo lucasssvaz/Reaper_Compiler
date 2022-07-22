@@ -39,7 +39,7 @@ typedef enum {$zero, $t0, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8,
               $t19, $t20, $t21, $t22, $t23, $t24, $t25, $t26, $t27, $t28,
               $t29, $t30, $t31, $t32, $t33, $t34, $t35, $t36, $t37, $t38,
               $t39, $r0, $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8,
-              $r9, $sp, $gp, $jmp, $ra, $ret, $br, $ctx, $txc, $ax0, $ax1,
+              $r9, $sp, $gp, $jmp, $ra, $ret, $br, $ctx, $k7, $ax0, $ax1,
               $ax2, $ax3, $crt } Reg;
 
 typedef struct {
