@@ -38,11 +38,13 @@ void main(void)
 {
     int y;
     int x;
+    int color;
     int start_y;
     start_y = 60;
 
     while(1)
     {
+        clear_screen();
         color_palette();
         draw_v_line(20, 20, 511, 3);
         draw_h_line(25, 20, 511, 3);
@@ -67,8 +69,17 @@ void main(void)
             y = y + 1;
         }
 
-        sleep(30);
-        clear_screen();
-        sleep(5);
+        sleep(30000);
+
+        color = 511;
+        while(color >= 0)
+        {
+
+            clear_screen();
+            draw_box(0, 0, 159, 119, color);
+            draw_char(72, 56, 511-color, 48);
+
+            color = color - 1;
+        }
     }
 }

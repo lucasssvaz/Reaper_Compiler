@@ -51,7 +51,7 @@ void main(void)
 	i = 0;
 	while (i < 10){
 		output(12288 + vet[i]);
-        sleep(1);
+        sleep(1000);
 		i = i + 1;
 	}
 }

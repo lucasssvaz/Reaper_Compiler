@@ -11,5 +11,5 @@ void main(void)
 	int x; int y;
 	x = 12; y = 8;
 	output(8192 + gcd(x,y));
-    sleep(2);
+    sleep(2000);
 }

@@ -25,7 +25,6 @@ void main(void)
             if (proc_ret[i] == 0)
             {
                 output(proc_id[i]);
-                sleep(2);
                 proc_ret[i] = exec_proc(proc_id[i]);
                 proc_done = proc_done + proc_ret[i];
             }

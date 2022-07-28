@@ -6,7 +6,7 @@ void main(void)
     while (x < y)
     {
         output(x);
-        sleep(2);
+        sleep(2000);
         x = x + 1;
     }
 }

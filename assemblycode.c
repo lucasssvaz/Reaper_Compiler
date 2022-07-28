@@ -31,12 +31,12 @@ int narg = 0;
 int jmpmain = 0;
 int syscall_label_counter = 0;
 
-char *new_syscall_label()
+char *new_syscall_label(char * label)
 {
-    char *final_str = (char *) calloc(20, sizeof(char));
+    char *final_str = (char *) calloc(32, sizeof(char));
     char var_buffer[10];
 
-    strcat(final_str, "L_SYSCALL");
+    strcat(final_str, label);
     sprintf(var_buffer, "%d", syscall_label_counter);
     syscall_label_counter++;
     return strcat(final_str, var_buffer);
@@ -551,19 +551,13 @@ void generateInstruction(QuadList l)
             else if (strcmp(a2.contents.var.name, "sleep") == 0)
             {
                 // 0 -> Seconds
-                int n_cycles = $ax0;
-                int cycle_counter = $ax1;
-                int n_seconds = getParamReg();
+                instructionFormat3(li, $ax2, cycles_1s/1000, NULL);
+                instructionFormat1(mul, $ax1, getParamReg(), $ax2);
+                instructionFormat3(li, $br, line + 2, NULL);
+                instructionFormat3(li, $ax2, 6, NULL);
+                instructionFormat2(addi, $ax2, $ax2, 2, NULL);
+                instructionFormat1(blt, $br, $ax2, $ax1);
 
-                char *loop_start = new_syscall_label();
-
-                instructionFormat3(li, n_cycles, cycles_1s, NULL);
-                instructionFormat1(mul, n_cycles, n_seconds, n_cycles);
-                instructionFormat3(li, $br, -1, loop_start);
-                instructionFormat3(li, cycle_counter, 6, NULL);
-                insertLabel(loop_start);
-                instructionFormat2(addi, cycle_counter, cycle_counter, 2, NULL);
-                instructionFormat1(blt, $br, cycle_counter, n_cycles);
             }
             else if (strcmp(a2.contents.var.name, "draw_pixel") == 0)
             {
@@ -580,8 +574,8 @@ void generateInstruction(QuadList l)
                 int x_counter = $ax0;
                 int x_end = $ax1;
 
-                char *x_loop_start = new_syscall_label();
-                char *x_loop_exit = new_syscall_label();
+                char *x_loop_start = new_syscall_label("L_HLINE");
+                char *x_loop_exit = new_syscall_label("L_HLINE");
 
                 instructionFormat2(move, x_counter, x_start, 0, NULL);
                 instructionFormat1(add, x_end, x_start, length);
@@ -603,8 +597,8 @@ void generateInstruction(QuadList l)
                 int y_counter = $ax0;
                 int y_end = $ax1;
 
-                char *y_loop_start = new_syscall_label();
-                char *y_loop_exit = new_syscall_label();
+                char *y_loop_start = new_syscall_label("L_VLINE");
+                char *y_loop_exit = new_syscall_label("L_VLINE");
 
                 instructionFormat2(move, y_counter, y_start, 0, NULL);
                 instructionFormat1(add, y_end, y_start, length);
@@ -627,10 +621,10 @@ void generateInstruction(QuadList l)
                 int x_counter = $ax0;
                 int y_counter = $ax1;
 
-                char *y_loop_exit = new_syscall_label();
-                char *x_loop_exit = new_syscall_label();
-                char *y_loop_start = new_syscall_label();
-                char *x_loop_start = new_syscall_label();
+                char *y_loop_exit = new_syscall_label("L_DRAWBOX");
+                char *x_loop_exit = new_syscall_label("L_DRAWBOX");
+                char *y_loop_start = new_syscall_label("L_DRAWBOX");
+                char *x_loop_start = new_syscall_label("L_DRAWBOX");
 
                 instructionFormat2(move, y_counter, y_start, 0, NULL);
                 instructionFormat3(li, $br, -1, y_loop_exit);
@@ -662,7 +656,7 @@ void generateInstruction(QuadList l)
                 int pixel_end = $ax1;
                 int pixel_color = $ax2;
 
-                char *loop_start = new_syscall_label();
+                char *loop_start = new_syscall_label("L_DRAWCHAR");
 
                 instructionFormat2(move, pixel_color, color, 0, NULL);
                 instructionFormat3(li, pixel_counter, 0, NULL);
@@ -684,10 +678,10 @@ void generateInstruction(QuadList l)
                 int x_counter = $ax0;
                 int y_counter = $ax1;
 
-                char *y_loop_exit = new_syscall_label();
-                char *x_loop_exit = new_syscall_label();
-                char *y_loop_start = new_syscall_label();
-                char *x_loop_start = new_syscall_label();
+                char *y_loop_exit = new_syscall_label("L_CLEARSCR");
+                char *x_loop_exit = new_syscall_label("L_CLEARSCR");
+                char *y_loop_start = new_syscall_label("L_CLEARSCR");
+                char *x_loop_start = new_syscall_label("L_CLEARSCR");
 
                 instructionFormat3(li, x_end, framebuffer_width-1, NULL);
                 instructionFormat3(li, y_end, framebuffer_height-1, NULL);
