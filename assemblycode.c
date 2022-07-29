@@ -321,6 +321,10 @@ void generateInstruction(QuadList l)
             instructionFormat1(divi, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
             break;
 
+        case opMOD:
+            instructionFormat1(mod, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
+            break;
+
         case opLT:
             instructionFormat1(slt, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
             break;

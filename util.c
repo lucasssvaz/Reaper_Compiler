@@ -12,6 +12,7 @@ void printType( TokenType token ){
         case SUB: fprintf(intercode, "SUB");   break;
         case MUL: fprintf(intercode, "MUL");   break;
         case DIV: fprintf(intercode, "DIV");   break;
+        case MOD: fprintf(intercode, "MOD");   break;
         case LT: fprintf(intercode, "LT"); break;
         case LTE: fprintf(intercode, "LTE"); break;
         case GT: fprintf(intercode, "GT"); break;
@@ -32,6 +33,7 @@ void printToken( TokenType token, const char* tokenString )
     case SUB: fprintf(listing, "-\n");   break;
     case MUL: fprintf(listing, "*\n");   break;
     case DIV: fprintf(listing, "/\n");   break;
+    case MOD: fprintf(listing, "%\n");   break;
     case ATRIBUI: fprintf(listing, " =\n");  break;
 
     case VIR: fprintf(listing, ",\n"); break;

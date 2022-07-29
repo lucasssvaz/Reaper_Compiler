@@ -24,7 +24,7 @@ Address var;
 Address offset;
 
 //MIGHT NEED CHANGING WHEN ADDING INSTRUCTIONS
-const char *operatorName[] = {"ADD", "SUB", "MUL", "DIV", "LT", "LTE", "GT", "GTE", "EQ", "OR", "ASSIGN", "ALLOC", "IMMED", "LOAD", "STORE", "VECTOR", "GOTO", "IF", "RET", "FUNC", "F_END", "PARAM", "CALL", "ARG", "LAB", "HALT"};
+const char *operatorName[] = {"ADD", "SUB", "MUL", "DIV", "MOD", "LT", "LTE", "GT", "GTE", "EQ", "OR", "ASSIGN", "ALLOC", "IMMED", "LOAD", "STORE", "VECTOR", "GOTO", "IF", "RET", "FUNC", "F_END", "PARAM", "CALL", "ARG", "LAB", "HALT"};
 
 Address empty;
 
@@ -374,6 +374,10 @@ static void ExpNode(TreeNode *tree)
                 case DIV:
                 //printf("over\n");
                     InsertQuad(opDIV, aux, addr1, addr2);
+                    break;
+                case MOD:
+                //printf("mod\n");
+                    InsertQuad(opMOD, aux, addr1, addr2);
                     break;
                 case LT:
                 //printf("lt\n");

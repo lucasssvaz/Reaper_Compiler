@@ -19,12 +19,14 @@ LETRA [a-zA-Z]
 whitespace  [ \t\r]+
 
 %%
-{whitespace}    	{           }
+{whitespace}    	{}
 
 "+"			    	{return SOM;}
 "-"			    	{return SUB;}
 "*"			    	{return MUL;}
 "/"			    	{return DIV;}
+"%"			    	{return MOD;}
+
 "="			    	{return ATRIBUI;}
 
 ","			    	{return VIR;}
@@ -32,22 +34,23 @@ whitespace  [ \t\r]+
 
 "("			    	{return APR;}
 ")"			    	{return FPR;}
-"["				{return ACO;}
-"]"				{return FCO;}
-"{"				{return ACH;}
-"}"				{return FCH;}
+"["				    {return ACO;}
+"]"				    {return FCO;}
+"{"				    {return ACH;}
+"}"				    {return FCH;}
 
-"/*"				{ char c;
-				  while(1){
-					c = input();
-					if(c==EOF) break;
-					if(c=='\n') lineno++;
-					if(c=='*'){
-						c = input();
-						if(c=='/') break;
-						}
-					}
-				}
+"/*"				{
+                        char c;
+				        while(1){
+				            c = input();
+				            if(c==EOF) break;
+					        if(c=='\n') lineno++;
+					        if(c=='*'){
+						        c = input();
+						        if(c=='/') break;
+						    }
+					    }
+				    }
 
 \n			        {lineno++;}
 "if"				{return IF;}
