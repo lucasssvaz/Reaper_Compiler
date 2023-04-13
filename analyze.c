@@ -126,6 +126,7 @@ static void insertNode( TreeNode * t){
 					strcmp(t->attr.name, "draw_box") != 0 &&
 					strcmp(t->attr.name, "draw_char") != 0 &&
 					strcmp(t->attr.name, "clear_screen") != 0 &&
+					strcmp(t->attr.name, "rand") != 0 &&
 					strcmp(t->attr.name, "exec_proc") != 0)
 				{
 					fprintf(listing, "Linha %d - Erro: A funcao %s nao foi declarada.\n", t->lineno, t->attr.name);

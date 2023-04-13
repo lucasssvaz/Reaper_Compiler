@@ -1,0 +1,159 @@
+int w_key;
+int s_key;
+int i_key;
+int k_key;
+int enter_key;
+int esc_key;
+int end_byte;
+
+int game_state;
+int ball_x;
+int ball_y;
+int ball_vx;
+int ball_vy;
+int ball_bounce_count;
+int pad_size;
+int p1_pad_x;
+int p1_pad_y;
+int p2_pad_x;
+int p2_pad_y;
+int field_max_y;
+int field_min_y;
+int last_byte;
+
+/* ======================================================= */
+
+void update_pads(void)
+{
+	int current_byte;
+
+	current_byte = getch();
+	output(current_byte);
+
+	if (current_byte != last_byte)
+	{
+		if (current_byte == w_key)
+			p1_pad_y = p1_pad_y - pad_size;
+		else if (current_byte == s_key)
+			p1_pad_y = p1_pad_y + pad_size;
+		else if (current_byte == i_key)
+			p2_pad_y = p2_pad_y - pad_size;
+		else if (current_byte == k_key)
+			p2_pad_y = p2_pad_y + pad_size;
+
+		last_byte = current_byte;
+	}
+}
+
+/* ----------------------------------------------------- */
+
+void update_ball(void)
+{
+	ball_x = ball_x + ball_vx;
+	ball_y = ball_y + ball_vy;
+
+	if (ball_x < p1_pad_x)
+	{
+		if (ball_y >= p1_pad_y)
+		{
+			if(ball_y < (p1_pad_y + pad_size))
+			{
+				ball_x = p1_pad_x - (ball_x - p1_pad_x);
+				ball_vx = 0-ball_vx;
+				ball_bounce_count = ball_bounce_count + 1;
+			}
+		}
+	}
+
+	if (ball_x > p2_pad_x)
+	{
+		if (ball_y >= p2_pad_y)
+		{
+			if (ball_y < (p2_pad_y + pad_size))
+			{
+				ball_x = p2_pad_x - (ball_x - p2_pad_x);
+				ball_vx = 0-ball_vx;
+				ball_bounce_count = ball_bounce_count + 1;
+			}
+		}
+	}
+
+	if (ball_y < field_min_y)
+	{
+		ball_y = field_min_y - (ball_y - field_min_y);
+		ball_vy = 0-ball_vy;
+		ball_bounce_count = ball_bounce_count + 1;
+	}
+
+	if (ball_y > field_max_y)
+	{
+		ball_y = field_max_y - (ball_y - field_max_y);
+		ball_vy = 0-ball_vy;
+		ball_bounce_count = ball_bounce_count + 1;
+	}
+}
+
+/* ----------------------------------------------------- */
+
+void draw_frame(int color)
+{
+	draw_v_line(p1_pad_x, p1_pad_y, color, pad_size);
+	draw_v_line(p2_pad_x, p2_pad_y, color, pad_size);
+	draw_pixel(ball_x, ball_y, color);
+}
+
+/* ======================================================= */
+
+void main(void)
+{
+	int x_display_shift;
+	int y_display_shift;
+	x_display_shift = 1 << (4*6);
+	y_display_shift = 1 << (4*4);
+
+	w_key = 29;
+	s_key = 27;
+	i_key = 67;
+	k_key = 66;
+	enter_key = 90;
+	esc_key = 118;
+	end_byte = 240;
+
+	ball_x = 79;
+	ball_y = 59;
+	ball_vx = 1;
+	ball_vy = 0;
+	ball_bounce_count = 0;
+	pad_size = 5;
+	p1_pad_x = 2;
+	p1_pad_y = 55;
+	p2_pad_x = 157;
+	p2_pad_y = 55;
+	field_max_y = 119;
+	field_min_y = 0;
+	last_byte = end_byte;
+
+	game_state = 0;
+
+	clear_screen();
+	draw_pixel(0, 0, 511);
+	draw_pixel(0, 119, 511);
+	draw_pixel(159, 0, 511);
+	draw_pixel(159, 119, 511);
+	draw_frame(511);
+
+	output(x_display_shift);
+	sleep(5000);
+
+	while(1)
+	{
+		/* clear_screen(); */
+		draw_frame(0);
+		update_pads();
+		update_ball();
+		draw_frame(511);
+
+		sleep(16);
+	}
+
+}

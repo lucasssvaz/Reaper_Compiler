@@ -1,0 +1,264 @@
+int a_key;
+int b_key;
+int c_key;
+int d_key;
+int e_key;
+int f_key;
+int g_key;
+int h_key;
+int i_key;
+int j_key;
+int k_key;
+int l_key;
+int m_key;
+int n_key;
+int o_key;
+int p_key;
+int q_key;
+int r_key;
+int s_key;
+int t_key;
+int u_key;
+int v_key;
+int w_key;
+int x_key;
+int y_key;
+int z_key;
+int n0_key;
+int n1_key;
+int n2_key;
+int n3_key;
+int n4_key;
+int n5_key;
+int n6_key;
+int n7_key;
+int n8_key;
+int n9_key;
+int backspace_key;
+int space_key;
+int enter_key;
+int esc_key;
+int end_byte;
+int quote_key;
+int period_key;
+int comma_key;
+int semicolon_key;
+int opensqbr_key;
+int closesqbr_key;
+int tilde_key;
+int accent_key;
+int equal_key;
+int minus_key;
+int slash_key;
+int backslash_key;
+int lshift_key;
+int rshift_key;
+
+int shift_modifier;
+int current_line;
+int current_char;
+int char_per_line;
+int max_lines;
+
+void process_key(void)
+{
+	int current_key;
+	int current_x;
+	int current_y;
+	int current_ascii;
+
+	current_key = getch();
+	current_x = 8*current_char;
+	current_y = 8*current_line;
+	current_ascii = 0;
+
+	if (current_key != end_byte)
+	{
+		if (current_key == esc_key)
+		{
+			clear_screen();
+			current_char = 0;
+			current_line = 0;
+		}
+		else if (current_key == lshift_key)
+		{
+			shift_modifier = 1;
+		}
+		else if (current_key == rshift_key)
+		{
+			shift_modifier = 1;
+		}
+		else if (current_key == enter_key)
+		{
+			if (current_line != (max_lines-1))
+			{
+				current_char = 0;
+				current_line = current_line + 1;
+			}
+		}
+		else {
+			draw_box(current_x, current_y, current_x+7, current_y+7, 0);
+			if (current_key == a_key)
+				current_ascii = 65;
+			else if (current_key == b_key)
+				current_ascii = 66;
+			else if (current_key == c_key)
+				current_ascii = 67;
+			else if (current_key == d_key)
+				current_ascii = 68;
+			else if (current_key == e_key)
+				current_ascii = 69;
+			else if (current_key == f_key)
+				current_ascii = 70;
+			else if (current_key == g_key)
+				current_ascii = 71;
+			else if (current_key == h_key)
+				current_ascii = 72;
+			else if (current_key == i_key)
+				current_ascii = 73;
+			else if (current_key == j_key)
+				current_ascii = 74;
+			else if (current_key == k_key)
+				current_ascii = 75;
+			else if (current_key == l_key)
+				current_ascii = 76;
+			else if (current_key == m_key)
+				current_ascii = 77;
+			else if (current_key == n_key)
+				current_ascii = 78;
+			else if (current_key == o_key)
+				current_ascii = 79;
+			else if (current_key == p_key)
+				current_ascii = 80;
+			else if (current_key == q_key)
+				current_ascii = 81;
+			else if (current_key == r_key)
+				current_ascii = 82;
+			else if (current_key == s_key)
+				current_ascii = 83;
+			else if (current_key == t_key)
+				current_ascii = 84;
+			else if (current_key == u_key)
+				current_ascii = 85;
+			else if (current_key == v_key)
+				current_ascii = 86;
+			else if (current_key == w_key)
+				current_ascii = 87;
+			else if (current_key == x_key)
+				current_ascii = 88;
+			else if (current_key == y_key)
+				current_ascii = 89;
+			else if (current_key == z_key)
+				current_ascii = 90;
+			else if (current_key == n0_key)
+				current_ascii = 48;
+			else if (current_key == n1_key)
+				current_ascii = 49;
+			else if (current_key == n2_key)
+				current_ascii = 50;
+			else if (current_key == n3_key)
+				current_ascii = 51;
+			else if (current_key == n4_key)
+				current_ascii = 52;
+			else if (current_key == n5_key)
+				current_ascii = 53;
+			else if (current_key == n6_key)
+				current_ascii = 54;
+			else if (current_key == n7_key)
+				current_ascii = 55;
+			else if (current_key == n8_key)
+				current_ascii = 56;
+			else if (current_key == n9_key)
+				current_ascii = 57;
+			else if (current_key == space_key)
+				current_ascii = 32;
+
+			draw_char(current_x, current_y, 511, current_ascii);
+
+			shift_modifier = 0;
+
+			if (current_char != (char_per_line-1))
+				current_char = current_char + 1;
+			else
+				if (current_line != (max_lines-1))
+					current_line = current_line + 1;
+		}
+	}
+}
+
+void main(void)
+{
+	a_key = 28;
+	b_key = 50;
+	c_key = 33;
+	d_key = 35;
+	e_key = 36;
+	f_key = 43;
+	g_key = 52;
+	h_key = 51;
+	i_key = 67;
+	j_key = 59;
+	k_key = 66;
+	l_key = 75;
+	m_key = 58;
+	n_key = 49;
+	o_key = 68;
+	p_key = 77;
+	q_key = 21;
+	r_key = 45;
+	s_key = 27;
+	t_key = 44;
+	u_key = 60;
+	v_key = 42;
+	w_key = 29;
+	x_key = 34;
+	y_key = 53;
+	z_key = 26;
+	n0_key = 69;
+	n1_key = 22;
+	n2_key = 30;
+	n3_key = 38;
+	n4_key = 37;
+	n5_key = 46;
+	n6_key = 54;
+	n7_key = 61;
+	n8_key = 62;
+	n9_key = 70;
+	backspace_key = 102;
+	space_key = 41;
+	enter_key = 90;
+	esc_key = 118;
+	end_byte = 240;
+	quote_key = 14;
+	period_key = 73;
+	comma_key = 65;
+	semicolon_key = 74;
+	opensqbr_key = 91;
+	closesqbr_key = 93;
+	tilde_key = 82;
+	accent_key = 84;
+	equal_key = 85;
+	minus_key = 78;
+	slash_key = 81;
+	backslash_key = 97;
+	lshift_key = 18;
+	rshift_key = 89;
+
+	shift_modifier = 0;
+	current_line = 0;
+	current_char = 0;
+	char_per_line = 20;
+	max_lines = 15;
+
+	clear_screen();
+	draw_pixel(0, 0, 511);
+	draw_pixel(0, 119, 511);
+	draw_pixel(159, 0, 511);
+	draw_pixel(159, 119, 511);
+
+	while(1)
+	{
+		process_key();
+	}
+
+}

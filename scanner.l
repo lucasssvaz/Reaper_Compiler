@@ -26,6 +26,8 @@ whitespace  [ \t\r]+
 "*"			    	{return MUL;}
 "/"			    	{return DIV;}
 "%"			    	{return MOD;}
+"<<"			    {return SHL;}
+">>"			    {return SHR;}
 
 "="			    	{return ATRIBUI;}
 

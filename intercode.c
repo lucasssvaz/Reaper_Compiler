@@ -24,7 +24,7 @@ Address var;
 Address offset;
 
 //MIGHT NEED CHANGING WHEN ADDING INSTRUCTIONS
-const char *operatorName[] = {"ADD", "SUB", "MUL", "DIV", "MOD", "LT", "LTE", "GT", "GTE", "EQ", "OR", "ASSIGN", "ALLOC", "IMMED", "LOAD", "STORE", "VECTOR", "GOTO", "IF", "RET", "FUNC", "F_END", "PARAM", "CALL", "ARG", "LAB", "HALT"};
+const char *operatorName[] = {"ADD", "SUB", "MUL", "DIV", "MOD", "SHL", "SHR", "LT", "LTE", "GT", "GTE", "EQ", "OR", "ASSIGN", "ALLOC", "IMMED", "LOAD", "STORE", "VECTOR", "GOTO", "IF", "RET", "FUNC", "F_END", "PARAM", "CALL", "ARG", "LAB", "HALT"};
 
 Address empty;
 
@@ -307,6 +307,7 @@ static void ExpNode(TreeNode *tree)
                 (strcmp(tree->attr.name, "draw_box") != 0) &&
                 (strcmp(tree->attr.name, "draw_char") != 0) &&
                 (strcmp(tree->attr.name, "clear_screen") != 0) &&
+                (strcmp(tree->attr.name, "rand") != 0) &&
                 (strcmp(tree->attr.name, "exec_proc") != 0))
             {
                 InsertQuad(opFUN, CreateAddrString(tree->attr.name, tree->scope), empty, empty);
@@ -378,6 +379,14 @@ static void ExpNode(TreeNode *tree)
                 case MOD:
                 //printf("mod\n");
                     InsertQuad(opMOD, aux, addr1, addr2);
+                    break;
+                case SHL:
+                //printf("shl\n");
+                    InsertQuad(opSHL, aux, addr1, addr2);
+                    break;
+                case SHR:
+                //printf("shr\n");
+                    InsertQuad(opSHR, aux, addr1, addr2);
                     break;
                 case LT:
                 //printf("lt\n");

@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symtab.h"
-#define SIZE 211
+#define SIZE 7919
 #define SHIFT 4
 
-
+// Something's weird when collisions happen
 static int hash (char* key)
 {
     int temp = 0;

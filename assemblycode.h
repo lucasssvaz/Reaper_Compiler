@@ -30,7 +30,7 @@ extern int progloc; // (0: SO; 1:3 - Programas)
 //ADD INSTRUCTIONS HERE
 typedef enum {  nop, halt, add, addi, bgt, sub, subi, mul, divi, mod, and, or, not, xor, muli, slt, sgt,
                 sle, sge, blt, shl, shr, move, ret,
-                li, beq, bne, j, jal, in, out, sw, lw, jr, ctx, getch, dwpx, dwch} InstrKind;
+                li, beq, bne, j, jal, in, out, sw, lw, jr, ctx, getch, dwpx, dwch, rng} InstrKind;
 typedef enum {  format1, format2, format3, format4 } InstrFormat;
 typedef enum {  instr, lbl } LineKind;
 typedef enum {  simple, vector, address } VarKind;

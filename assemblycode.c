@@ -9,7 +9,7 @@
 //ADD INSTRUCTIONS HERE
 const char *operatorNameInstruction[] = {"nop", "halt", "add", "addi", "bgt", "sub", "subi", "mul", "divi", "mod", "and", "or", "not", "xor", "muli",
                                         "slt", "sgt", "sle", "sge", "blt", "shl", "shr", "move", "ret", "li", "beq", "bne", "j", "jal", "in", "out",
-                                        "sw", "lw", "jr", "ctx", "getch", "dwpx", "dwch"};
+                                        "sw", "lw", "jr", "ctx", "getch", "dwpx", "dwch", "rng"};
 
 const char *regNames[] = {"$zero", "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
                           "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18",
@@ -325,6 +325,14 @@ void generateInstruction(QuadList l)
             instructionFormat1(mod, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
             break;
 
+        case opSHL:
+            instructionFormat1(shl, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
+            break;
+
+        case opSHR:
+            instructionFormat1(shr, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
+            break;
+
         case opLT:
             instructionFormat1(slt, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
             break;
@@ -527,6 +535,22 @@ void generateInstruction(QuadList l)
             {
                 instructionFormat3(in, getReg(a1.contents.var.name), 0, NULL);
             }
+            else if (strcmp(a2.contents.var.name, "rand") == 0)
+            {
+                // -1 -> Min, 0 -> Max
+                int rand_min = getParamReg()-1;
+                int rand_max = getParamReg();
+                int rand_num = $ax0;
+                int range_aux = $ax1;
+                int final_rand = $ax2;
+
+                instructionFormat3(rng, rand_num, 0, NULL);
+                instructionFormat2(addi, range_aux, rand_max, 1, NULL);
+                instructionFormat1(sub, range_aux, range_aux, rand_min);
+                instructionFormat1(mod, final_rand, rand_num, range_aux);
+                instructionFormat1(add, final_rand, final_rand, rand_min);
+                instructionFormat2(move, getReg(a1.contents.var.name), final_rand, 0, NULL);
+            }
             else if (strcmp(a2.contents.var.name, "getch") == 0)
             {
                 instructionFormat3(getch, getReg(a1.contents.var.name), 0, NULL);
@@ -554,7 +578,7 @@ void generateInstruction(QuadList l)
             }
             else if (strcmp(a2.contents.var.name, "sleep") == 0)
             {
-                // 0 -> Seconds
+                // 0 -> Milliseconds
                 instructionFormat3(li, $ax2, cycles_1s/1000, NULL);
                 instructionFormat1(mul, $ax1, getParamReg(), $ax2);
                 instructionFormat3(li, $br, line + 2, NULL);

@@ -21,7 +21,7 @@
 
 %token IF ELSE WHILE RET INT VOID
 %right INT
-%token ATRIBUI CMP DIF LT LTE GT GTE SOM SUB MUL DIV MOD APR FPR ACO FCO ACH FCH VIR PV
+%token ATRIBUI CMP DIF LT LTE GT GTE SHL SHR SOM SUB MUL DIV MOD APR FPR ACO FCO ACH FCH VIR PV
 %token ID NUM
 %token ERR ENDFILE
 
@@ -447,6 +447,16 @@ mult: MUL
         {
             $$ = newExpNode(opK);
             $$->attr.op = MOD;
+        }
+    | SHL
+        {
+            $$ = newExpNode(opK);
+            $$->attr.op = SHL;
+        }
+    | SHR
+        {
+            $$ = newExpNode(opK);
+            $$->attr.op = SHR;
         }
 	;
 fator: APR expressao FPR
