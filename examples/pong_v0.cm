@@ -1,3 +1,5 @@
+/* corrigido altura dos pads e local das bordas */
+
 int w_key;
 int s_key;
 int i_key;
