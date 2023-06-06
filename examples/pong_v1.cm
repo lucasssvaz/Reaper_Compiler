@@ -1,5 +1,4 @@
 int end_byte;
-
 int game_state;
 int ball_x;
 int ball_y;
@@ -16,30 +15,6 @@ int field_min_y;
 int last_byte;
 
 /* ======================================================= */
-
-void update_pads(void)
-{
-	int current_byte;
-
-	current_byte = getch();
-	output(current_byte);
-
-	if (current_byte != last_byte)
-	{
-		if (current_byte == 29)					/* w_key */
-			p1_pad_y = p1_pad_y - pad_size;
-		else if (current_byte == 27)			/* s_key */
-			p1_pad_y = p1_pad_y + pad_size;
-		else if (current_byte == 67)			/* i_key */
-			p2_pad_y = p2_pad_y - pad_size;
-		else if (current_byte == 66)			/* k_key */
-			p2_pad_y = p2_pad_y + pad_size;
-
-		last_byte = current_byte;
-	}
-}
-
-/* ----------------------------------------------------- */
 
 void update_ball(void)
 {
@@ -84,6 +59,33 @@ void update_ball(void)
 		ball_y = field_max_y - (ball_y - field_max_y);
 		ball_vy = 0-ball_vy;
 		ball_bounce_count = ball_bounce_count + 1;
+	}
+}
+
+/* ----------------------------------------------------- */
+
+void update_pads(void)
+{
+	int current_byte;
+
+	output(p1_pad_y);
+	sleep(500);
+
+	current_byte = getch();
+	output(current_byte);
+
+	if (current_byte != last_byte)
+	{
+		if (current_byte == 29)					/* w_key */
+			p1_pad_y = p1_pad_y - pad_size;
+		else if (current_byte == 27)			/* s_key */
+			p1_pad_y = p1_pad_y + pad_size;
+		else if (current_byte == 67)			/* i_key */
+			p2_pad_y = p2_pad_y - pad_size;
+		else if (current_byte == 66)			/* k_key */
+			p2_pad_y = p2_pad_y + pad_size;
+
+		last_byte = current_byte;
 	}
 }
 
@@ -139,6 +141,8 @@ void main(void)
 
 	while(1)
 	{
+		output(p1_pad_y);
+		sleep(500);
 		/* clear_screen(); */
 		draw_frame(0);
 		update_pads();

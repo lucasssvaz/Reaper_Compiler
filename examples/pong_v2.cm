@@ -17,6 +17,13 @@ int last_byte;
 
 /* ======================================================= */
 
+void removedor_de_bugs(void)
+{
+
+}
+
+/* ----------------------------------------------------- */
+
 void update_pads(void)
 {
 	int current_byte;
@@ -141,6 +148,7 @@ void main(void)
 	{
 		/* clear_screen(); */
 		draw_frame(0);
+		removedor_de_bugs();
 		update_pads();
 		update_ball();
 		draw_frame(511);
