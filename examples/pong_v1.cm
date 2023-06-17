@@ -10,11 +10,52 @@ int p1_pad_x;
 int p1_pad_y;
 int p2_pad_x;
 int p2_pad_y;
-int field_max_y;
+int w_key;
+int s_key;
+int i_key;
+int k_key;
+int field_min_x;
+int field_max_x;
 int field_min_y;
+int field_max_y;
 int last_byte;
 
-/* ======================================================= */
+void removedor_de_bugs(void)
+{
+
+}
+
+void update_pads(void)
+{
+	int current_byte;
+
+	current_byte = getch();
+	output(current_byte);
+
+	if (current_byte == w_key){
+		if (p1_pad_y - 2 > 0){
+			p1_pad_y = p1_pad_y - 2;
+		}
+	}
+
+	else if (current_byte == s_key){
+		if (p1_pad_y + 2 < 120 - 3) {
+			p1_pad_y = p1_pad_y + 2;
+		}
+	}
+
+	else if (current_byte == i_key){
+		if (p2_pad_y - 2 > 0){
+			p2_pad_y = p2_pad_y - 2;
+		}
+	}
+
+	else if (current_byte == k_key){
+		if (p2_pad_y + 2 < 120 - 3) {
+			p2_pad_y = p2_pad_y + 2;
+		}
+	}
+}
 
 void update_ball(void)
 {
@@ -62,43 +103,12 @@ void update_ball(void)
 	}
 }
 
-/* ----------------------------------------------------- */
-
-void update_pads(void)
-{
-	int current_byte;
-
-	output(p1_pad_y);
-	sleep(500);
-
-	current_byte = getch();
-	output(current_byte);
-
-	if (current_byte != last_byte)
-	{
-		if (current_byte == 29)					/* w_key */
-			p1_pad_y = p1_pad_y - pad_size;
-		else if (current_byte == 27)			/* s_key */
-			p1_pad_y = p1_pad_y + pad_size;
-		else if (current_byte == 67)			/* i_key */
-			p2_pad_y = p2_pad_y - pad_size;
-		else if (current_byte == 66)			/* k_key */
-			p2_pad_y = p2_pad_y + pad_size;
-
-		last_byte = current_byte;
-	}
-}
-
-/* ----------------------------------------------------- */
-
 void draw_frame(int color)
 {
 	draw_v_line(p1_pad_x, p1_pad_y, color, pad_size);
 	draw_v_line(p2_pad_x, p2_pad_y, color, pad_size);
 	draw_pixel(ball_x, ball_y, color);
 }
-
-/* ======================================================= */
 
 void main(void)
 {
@@ -117,10 +127,16 @@ void main(void)
 	pad_size = 5;
 	p1_pad_x = 2;
 	p1_pad_y = 57;
-	p2_pad_x = 157;
+	p2_pad_x = 158;
 	p2_pad_y = 57;
-	field_max_y = 119;
-	field_min_y = 1;
+	w_key = 29;
+	s_key = 27;
+	i_key = 67;
+	k_key = 66;
+	field_min_x = 1; /* antes estava 2 */
+	field_max_x = 158;
+	field_min_y = 2;
+	field_max_y = 119; /* antes estava 118 */
 	last_byte = end_byte;
 
 	game_state = 0;
@@ -141,8 +157,6 @@ void main(void)
 
 	while(1)
 	{
-		output(p1_pad_y);
-		sleep(500);
 		/* clear_screen(); */
 		draw_frame(0);
 		update_pads();
@@ -151,5 +165,4 @@ void main(void)
 
 		sleep(16);
 	}
-
 }
