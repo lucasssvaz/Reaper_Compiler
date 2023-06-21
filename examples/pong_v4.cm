@@ -8,13 +8,10 @@ int ball_y;
 int ball_vx;
 int ball_vy;
 int ball_bounce_count;
-int p1_pad_size;
-int p2_pad_size;
+int pad_size;
 int p1_pad_x;
-int p1_pad_y_init;
 int p1_pad_y;
 int p2_pad_x;
-int p2_pad_y_init;
 int p2_pad_y;
 int w_key;
 int s_key;
@@ -65,8 +62,8 @@ void update_pads(void)
 
 void draw_frame(int color)
 {
-	draw_v_line(p1_pad_x, p1_pad_y, color, p1_pad_size);
-	draw_v_line(p2_pad_x, p2_pad_y, color, p2_pad_size);
+	draw_v_line(p1_pad_x, p1_pad_y, color, pad_size);
+	draw_v_line(p2_pad_x, p2_pad_y, color, pad_size);
 	draw_pixel(ball_x, ball_y, color);
 }
 
@@ -77,8 +74,8 @@ void restart_game(void)
 	ball_y = 59;
 
 	/* reset pads position */
-	p1_pad_y = p1_pad_y_init;
-	p2_pad_y = p2_pad_y_init;
+	p1_pad_y = 57;
+	p2_pad_y = 57;
 
 	/* draw pads and ball */
 	draw_frame(511);
@@ -135,7 +132,7 @@ void update_ball(void)
 	{
 		if (ball_y >= p1_pad_y)
 		{
-			if(ball_y < (p1_pad_y + p1_pad_size))
+			if(ball_y < (p1_pad_y + pad_size))
 			{
 				ball_x = p1_pad_x - (ball_x - p1_pad_x);
 				ball_vx = 0-ball_vx;
@@ -144,8 +141,6 @@ void update_ball(void)
 		}
 	} else if (ball_x < p1_pad_x) {
 		p2_score = p2_score + 1;
-		p2_pad_size = p2_pad_size - 2;
-		p2_pad_y_init = p2_pad_y_init + 1;
 		output(p2_score);
 
 		if (p2_score == 5) {
@@ -159,7 +154,7 @@ void update_ball(void)
 	{
 		if (ball_y >= p2_pad_y)
 		{
-			if (ball_y < (p2_pad_y + p2_pad_size))
+			if (ball_y < (p2_pad_y + pad_size))
 			{
 				ball_x = p2_pad_x - (ball_x - p2_pad_x);
 				ball_vx = 0-ball_vx;
@@ -168,8 +163,6 @@ void update_ball(void)
 		}
 	} else if (ball_x > p2_pad_x) {
 		p1_score = p1_score + 1;
-		p1_pad_size = p1_pad_size - 2;
-		p1_pad_y_init = p1_pad_y_init + 1;
 		output(p1_score);
 
 		if (p1_score == 5)
@@ -204,23 +197,20 @@ void main(void)
 	ball_vy = 0;
 	ball_bounce_count = 0;
 
-	p1_pad_size = 15;
-	p2_pad_size = 15;
+	pad_size = 5;
 
-	p1_pad_x = 1;
-	p1_pad_y_init = 52;
-	p1_pad_y = 52;
-	p2_pad_x = 159;
-	p2_pad_y_init = 52;
-	p2_pad_y = 52;
+	p1_pad_x = 2;
+	p1_pad_y = 57;
+	p2_pad_x = 158;
+	p2_pad_y = 57;
 
 	w_key = 29;
 	s_key = 27;
 	i_key = 67;
 	k_key = 66;
 
-	field_min_x = 1;
-	field_max_x = 159;
+	field_min_x = 2;
+	field_max_x = 158;
 
 	field_min_y = 1;
 	field_max_y = 118;
@@ -231,6 +221,12 @@ void main(void)
 	p2_score = 0;
 
 	clear_screen();
+
+	/* draw corners */
+	draw_pixel(1, 1, 511);			/* canto superior esquerdo */
+	draw_pixel(1, 119, 511);		/* canto inferior esquerdo */
+	draw_pixel(159, 1, 511);		/* canto superior direito */
+	draw_pixel(159, 119, 511);		/* canto inferior direito */
 
 	/* draw pads and ball */
 	draw_frame(511);
