@@ -68,6 +68,9 @@ void draw_frame(int color)
 	draw_v_line(p1_pad_x, p1_pad_y, color, p1_pad_size);
 	draw_v_line(p2_pad_x, p2_pad_y, color, p2_pad_size);
 	draw_pixel(ball_x, ball_y, color);
+
+	draw_char(2*8, 12 + 8*0, color, 16*3 + p1_score);
+	draw_char(17*8, 12 + 8*0, color, 16*3 + p2_score);
 }
 
 void restart_game(void)
@@ -84,46 +87,6 @@ void restart_game(void)
 	draw_frame(511);
 
 	sleep(3500);
-}
-
-void print_score(void){
-	if (p1_score == 0) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p1_score == 1) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 2) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 3) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 4) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 5) {
-		draw_pixel(1, 1, 511);
-	}
-
-	if (p1_score == 0) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 1) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 2) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 3) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 4) {
-		draw_pixel(1, 1, 511);
-	}
-	if (p2_score == 5) {
-		draw_pixel(1, 1, 511);
-	}
 }
 
 void update_ball(void)
@@ -148,7 +111,7 @@ void update_ball(void)
 		p2_pad_y_init = p2_pad_y_init + 1;
 		output(p2_score);
 
-		if (p2_score == 5) {
+		if (p2_score == 2) {
 			game_state = 0;
 		}
 
@@ -172,8 +135,9 @@ void update_ball(void)
 		p1_pad_y_init = p1_pad_y_init + 1;
 		output(p1_score);
 
-		if (p1_score == 5)
+		if (p1_score == 2) {
 			game_state = 0;
+		}
 
 		restart_game();
 	}
@@ -234,6 +198,10 @@ void main(void)
 
 	/* draw pads and ball */
 	draw_frame(511);
+
+	/* draw scoreboard */
+	draw_char(2*8, 12 + 8*0, 511, 16*3 + p1_score);
+	draw_char(17*8, 12 + 8*0, 511, 16*3 + p2_score);
 
 	output(x_display_shift);
 	sleep(3000);
