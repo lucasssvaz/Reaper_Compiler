@@ -18,7 +18,7 @@
 extern int progloc; // (0: SO; 1:3 - Programas)
 // POSICAO DA MEMORIA
 #define nmem 512
-#define ninst 1024
+#define ninst 2048
 
 #define framebuffer_width 160
 #define framebuffer_height 120
