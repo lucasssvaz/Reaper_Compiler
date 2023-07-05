@@ -65,9 +65,16 @@ void update_pads(void)
 
 void draw_frame(int color)
 {
+	draw_h_line(1, 119, color, 160);
 	draw_v_line(p1_pad_x, p1_pad_y, color, p1_pad_size);
 	draw_v_line(p2_pad_x, p2_pad_y, color, p2_pad_size);
 	draw_pixel(ball_x, ball_y, color);
+
+	draw_char(4, 2, color, 16*5);
+	draw_char(12, 2, color, 16*3 + 1);
+
+	draw_char(139, 2, color, 16*5);
+	draw_char(147, 2, color, 16*3 + 2);
 
 	draw_char(1*8, 12 + 8*0, color, 16*3 + p1_score);
 	draw_char(18*8, 12 + 8*0, color, 16*3 + p2_score);
@@ -187,11 +194,11 @@ void main(void)
 	i_key = 67;
 	k_key = 66;
 
-	field_min_x = 0;
+	field_min_x = 1;
 	field_max_x = 159;
 
-	field_min_y = 0;
-	field_max_y = 120;
+	field_min_y = 10;
+	field_max_y = 119;
 
 	game_state = 1;
 
