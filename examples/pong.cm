@@ -75,8 +75,8 @@ void draw_frame(int color, int p1_color, int p2_color)
 	draw_pixel(ball_x, ball_y, color);
 
 	/* draw horizontal limits */
-	draw_h_line(1, field_min_y, 511, 160);
-	draw_h_line(1, field_max_y, 511, 160);
+	draw_h_line(1, field_min_y, color, 160);
+	draw_h_line(1, field_max_y, color, 160);
 
 	/*  draw "P1" */
 	draw_char(4, 2, p1_color, 16*5);
