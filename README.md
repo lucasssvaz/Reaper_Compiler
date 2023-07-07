@@ -10,3 +10,5 @@ make
 ./Compiler <Filename> <ID>
 ```
 
+example:
+./Compiler examples/pong.cm 1

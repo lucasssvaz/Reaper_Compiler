@@ -26,6 +26,8 @@ int field_min_y;
 int field_max_y;
 int p1_score;
 int p2_score;
+int p1_color;
+int p2_color;
 
 void removedor_de_bugs(void)
 {
@@ -63,36 +65,49 @@ void update_pads(void)
 	}
 }
 
-void draw_frame(int color)
+void draw_frame(int color, int p1_color, int p2_color)
 {
-	draw_h_line(1, 119, color, 160);
+	/* draw pads */
 	draw_v_line(p1_pad_x, p1_pad_y, color, p1_pad_size);
 	draw_v_line(p2_pad_x, p2_pad_y, color, p2_pad_size);
+
+	/* draw ball */
 	draw_pixel(ball_x, ball_y, color);
 
-	draw_char(4, 2, color, 16*5);
-	draw_char(12, 2, color, 16*3 + 1);
+	/* draw horizontal limits */
+	draw_h_line(1, field_min_y, 511, 160);
+	draw_h_line(1, field_max_y, 511, 160);
 
-	draw_char(139, 2, color, 16*5);
-	draw_char(147, 2, color, 16*3 + 2);
+	/*  draw "P1" */
+	draw_char(4, 2, p1_color, 16*5);
+	draw_char(12, 2, p1_color, 16*3 + 1);
 
-	draw_char(1*8, 12 + 8*0, color, 16*3 + p1_score);
-	draw_char(18*8, 12 + 8*0, color, 16*3 + p2_score);
+	/*  draw P1 score */
+	draw_char(55, 2, p1_color, 16*3 + p1_score);
+
+	/*  draw "P2" */
+	draw_char(139, 2, p2_color, 16*5);
+	draw_char(147, 2, p2_color, 16*3 + 2);
+
+	/* draw P2 score */
+	draw_char(96, 2, p2_color, 16*3 + p2_score);
 }
 
-void draw_win(int player){
-	draw_char(4*8, 12 + 8*0, 511, 16*5 + 0);
-	draw_char(5*8, 12 + 8*0, 511, 16*6 + 12);
-	draw_char(6*8, 12 + 8*0, 511, 16*6 + 1);
-	draw_char(7*8, 12 + 8*0, 511, 16*7 + 9);
-	draw_char(8*8, 12 + 8*0, 511, 16*6 + 5);
-	draw_char(9*8, 12 + 8*0, 511, 16*7 + 2);
+void draw_win(int player, int color){
+	/* draw "Player" */
+	draw_char(4*8, 12 + 8*0, color, 16*5 + 0);
+	draw_char(5*8, 12 + 8*0, color, 16*6 + 12);
+	draw_char(6*8, 12 + 8*0, color, 16*6 + 1);
+	draw_char(7*8, 12 + 8*0, color, 16*7 + 9);
+	draw_char(8*8, 12 + 8*0, color, 16*6 + 5);
+	draw_char(9*8, 12 + 8*0, color, 16*7 + 2);
 
-	draw_char(11*8, 12 + 8*0, 511, 16*3 + player);
+	draw_char(11*8, 12 + 8*0, color, 16*3 + player);
 
-	draw_char(13*8, 12 + 8*0, 511, 16*5 + 7);
-	draw_char(14*8, 12 + 8*0, 511, 16*6 + 9);
-	draw_char(15*8, 12 + 8*0, 511, 16*6 + 14);
+	/* draw "Win" */
+	draw_char(13*8, 12 + 8*0, color, 16*5 + 7);
+	draw_char(14*8, 12 + 8*0, color, 16*6 + 9);
+	draw_char(15*8, 12 + 8*0, color, 16*6 + 14);
 }
 
 void restart_game(void)
@@ -105,7 +120,15 @@ void restart_game(void)
 	p1_pad_y = p1_pad_y_init;
 	p2_pad_y = p2_pad_y_init;
 
-	draw_frame(511);
+	/*  draw "P1" */
+	draw_char(4, 2, p1_color, 16*5);
+	draw_char(12, 2, p1_color, 16*3 + 1);
+
+	/*  draw "P2" */
+	draw_char(139, 2, p2_color, 16*5);
+	draw_char(147, 2, p2_color, 16*3 + 2);
+
+	draw_frame(511, p1_color, p2_color);
 
 	sleep(2000);
 }
@@ -176,8 +199,11 @@ void main(void)
 	ball_x = 79;
 	ball_y = 59;
 	ball_vx = 1;
-	ball_vy = 1;
+	ball_vy = 0;
 	ball_bounce_count = 0;
+
+	p1_color = 711;
+	p2_color = 64*7;
 
 	p1_pad_size = 21;
 	p2_pad_size = 21;
@@ -208,7 +234,7 @@ void main(void)
 	clear_screen();
 
 	/* draw pads and ball */
-	draw_frame(511);
+	draw_frame(511, p1_color, p2_color);
 
 	output(x_display_shift);
 	sleep(3000);
@@ -217,22 +243,22 @@ void main(void)
 	{
 		/* clear_screen(); */
 
-		draw_frame(0);
+		draw_frame(0, 0, 0);
 		update_pads();
 		update_ball();
-		draw_frame(511);
+		draw_frame(511, p1_color, p2_color);
 
 		sleep(16);
 
 		if (p1_score == 5) {
 			game_state = 0;
-			draw_frame(0);
-			draw_win(1);
+			draw_frame(0, 0, 0);
+			draw_win(1, p1_color);
 		}
 		else if (p2_score == 5) {
 			game_state = 0;
-			draw_frame(0);
-			draw_win(2);
+			draw_frame(0, 0, 0);
+			draw_win(2, p2_color);
 		}
 	}
 
