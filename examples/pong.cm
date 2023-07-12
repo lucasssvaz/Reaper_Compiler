@@ -199,7 +199,7 @@ void main(void)
 	ball_x = 79;
 	ball_y = 59;
 	ball_vx = 1;
-	ball_vy = 0;
+	ball_vy = 1;
 	ball_bounce_count = 0;
 
 	p1_color = 711;
