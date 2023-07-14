@@ -7,7 +7,9 @@ int ball_x;
 int ball_y;
 int ball_vx;
 int ball_vy;
+
 int ball_bounce_count;
+
 int p1_pad_size;
 int p2_pad_size;
 int p1_pad_x;
@@ -16,22 +18,25 @@ int p1_pad_y;
 int p2_pad_x;
 int p2_pad_y_init;
 int p2_pad_y;
+
 int w_key;
 int s_key;
 int i_key;
 int k_key;
+
 int field_min_x;
 int field_max_x;
 int field_min_y;
 int field_max_y;
+
 int p1_score;
 int p2_score;
 int p1_color;
 int p2_color;
 
-void removedor_de_bugs(void)
+void bug_remover(void)
 {
-
+	/* this function isn't called */
 }
 
 void update_pads(void)
@@ -102,6 +107,7 @@ void draw_win(int player, int color){
 	draw_char(8*8, 12 + 8*0, color, 16*6 + 5);
 	draw_char(9*8, 12 + 8*0, color, 16*7 + 2);
 
+	/* draw player number */
 	draw_char(11*8, 12 + 8*0, color, 16*3 + player);
 
 	/* draw "Win" */
@@ -262,5 +268,5 @@ void main(void)
 		}
 	}
 
-	sleep(2000);
+	sleep(3000);
 }
